@@ -13,8 +13,11 @@ class KeyboardViewController: UIInputViewController {
 	
 	@IBOutlet var nextKeyboardButton: UIButton!
 	
-	var keyboardView: UIView!	
+	var keyboardView: UIView!
+    var popUpView: UIView!
+    var popUpLetters: UIStackView!
 	var keys: [UIButton] = []
+    var keyPressed: String = ""
 	var paddingViews: [UIButton] = []
 	var backspaceTimer: Timer?
 	
@@ -121,8 +124,8 @@ class KeyboardViewController: UIInputViewController {
 				let button = UIButton(type: .custom)
 				button.backgroundColor = Constants.keyNormalColour
 				button.setTitleColor(.black, for: .normal) 
-				let key = keyboard[row][col]
-				let capsKey = keyboard[row][col].capitalized
+                let key = keyboard[row][col]
+				let capsKey = key.capitalized
 				let keyToDisplay = shiftButtonState == .normal ? key : capsKey
 				button.layer.setValue(key, forKey: "original")
 				button.layer.setValue(keyToDisplay, forKey: "keyToDisplay")
@@ -135,10 +138,13 @@ class KeyboardViewController: UIInputViewController {
 				button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
 				button.addTarget(self, action: #selector(keyMultiPress(_:event:)), for: .touchDownRepeat)
 
-				if key == "⌫"{
-					let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
-					button.addGestureRecognizer(longPressRecognizer)
-				}				
+                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
+                button.addGestureRecognizer(longPressRecognizer)
+                
+//				if key == "⌫"{
+//					let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
+//					button.addGestureRecognizer(longPressRecognizer)
+//				}
 				
 				button.layer.cornerRadius = buttonWidth/4
 				keys.append(button)
@@ -156,7 +162,7 @@ class KeyboardViewController: UIInputViewController {
 				
 				//top row is longest row so it should decide button width 
 				print("button width: ", buttonWidth)
-				if key == "⌫" || key == "↩" || key == "#+=" || key == "ABC" || key == "123" || key == "⬆️" || key == "🌐"{
+				if key == "⌫" || key == "💰" || key == "↩" || key == "#+=" || key == "ABC" || key == "123" || key == "⬆️" || key == "🌐"{
 					button.widthAnchor.constraint(equalToConstant: buttonWidth + buttonWidth/2).isActive = true
 					button.layer.setValue(true, forKey: "isSpecial")
 					button.backgroundColor = Constants.specialKeyNormalColour
@@ -257,15 +263,124 @@ class KeyboardViewController: UIInputViewController {
 	
 	@objc func keyLongPressed(_ gesture: UIGestureRecognizer){
 		if gesture.state == .began {
-			backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { (timer) in
-				self.handlDeleteButtonPressed()
-			}
+            if self.view.viewWithTag(1001) != nil {
+                 // remove popUpLetters
+                //popUpKeys.forEach{$0.removeFromSuperview()}
+                popUpView.removeFromSuperview()
+            }
+            
+            var popUpKeys: [UIButton] = []
+            
+            let buttonWidth:CGFloat = 35.0
+            let buttonHeight:CGFloat = 45.0
+            var extraKeyboard: [String]
+
+            let tapLocation = gesture.location(in: self.view)
+
+            if let key = (gesture.view as! UIButton).titleLabel?.text {
+                
+                switch key {
+                    case "a":
+                        extraKeyboard = Constants.extrasLettersA
+                    case "c":
+                        extraKeyboard = Constants.extrasLettersC
+                    case "e":
+                        extraKeyboard = Constants.extrasLettersE
+                    case "i":
+                        extraKeyboard = Constants.extrasLettersI
+                    case "n":
+                        extraKeyboard = Constants.extrasLettersN
+                    case "o":
+                        extraKeyboard = Constants.extrasLettersO
+                    case "s":
+                        extraKeyboard = Constants.extrasLettersS
+                    case "u":
+                        extraKeyboard = Constants.extrasLettersU
+                    case "y":
+                        extraKeyboard = Constants.extrasLettersY
+                    case "z":
+                        extraKeyboard = Constants.extrasLettersZ
+                    default:
+                        extraKeyboard = [key]
+                }
+                
+                let letters = extraKeyboard.count
+                for row in 0...letters - 1{
+                    let button = UIButton(type: .custom)
+                    button.backgroundColor = Constants.keyNormalColour
+                    button.setTitleColor(.black, for: .normal)
+                    let key = extraKeyboard[row]
+                    let capsKey = key.capitalized
+                    let keyToDisplay = shiftButtonState == .normal ? key : capsKey
+                    button.layer.setValue(key, forKey: "original")
+                    button.layer.setValue(keyToDisplay, forKey: "keyToDisplay")
+                    button.layer.setValue(false, forKey: "isSpecial")
+                    button.setTitle(keyToDisplay, for: .normal)
+                    button.layer.borderColor = keyboardView.backgroundColor?.cgColor
+                    button.layer.borderWidth = 4
+                    button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
+                    button.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
+                    button.frame.size.width = buttonWidth
+                    button.frame.size.height = buttonHeight
+                    button.addTarget(self, action: #selector(keyPressedTouchUp), for: .touchUpInside)
+                    button.addTarget(self, action: #selector(keyTouchDown), for: .touchDown)
+                    button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
+                    button.addTarget(self, action: #selector(keyMultiPress(_:event:)), for: .touchDownRepeat)
+                    button.layer.cornerRadius = buttonWidth/4
+
+                    popUpKeys.append(button)
+                }
+                
+                popUpLetters = UIStackView(arrangedSubviews: popUpKeys)
+                popUpLetters.axis = .horizontal
+                popUpLetters.distribution = .equalSpacing
+                popUpLetters.alignment = .center
+                popUpLetters.spacing = 2.0
+                popUpLetters.frame.size.width = popUpLetters.frame.size.width + 20
+                popUpLetters.frame.size.height = popUpLetters.frame.size.height + 10
+                popUpLetters.translatesAutoresizingMaskIntoConstraints = false
+                popUpLetters.setNeedsLayout()
+                popUpLetters.layoutIfNeeded()
+                
+                proxy.insertText("\n \(popUpLetters.frame)")
+                
+                //popUpView=UIView(frame: CGRect(x: tapLocation.x-10, y: tapLocation.y-65, width: 100, height: 40))
+                
+                //PopUpView
+                popUpView=UIView(frame: CGRect(x: tapLocation.x-10, y: tapLocation.y-65, width: popUpLetters.frame.size.width, height: popUpLetters.frame.size.height))
+                popUpView.backgroundColor=keyboardView.backgroundColor
+                popUpView.layer.cornerRadius=5
+                popUpView.layer.borderWidth=2
+                popUpView.tag=1001
+                popUpView.layer.borderColor=UIColor.gray.cgColor
+                popUpView.setNeedsLayout()
+                popUpView.layoutIfNeeded()
+                popUpView.addSubview(popUpLetters)
+                
+                self.view.addSubview(popUpView)
+            }
+
+//			backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { (timer) in
+//				self.handlDeleteButtonPressed()
+//			}
 		} else if gesture.state == .ended || gesture.state == .cancelled {
-			backspaceTimer?.invalidate()
-			backspaceTimer = nil
-			(gesture.view as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+            //popUpKeys.forEach{$0.removeFromSuperview()}
+            popUpView.removeFromSuperview()
+            (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
+//			backspaceTimer?.invalidate()
+//			backspaceTimer = nil
+//			(gesture.view as! UIButton).backgroundColor = Constants.specialKeyNormalColour
 		}
 	}
+    
+    @objc func extraButtonAction(sender: Any) {
+
+        print("Entrou aqui")
+
+        //Than remove popView
+        popUpView.removeFromSuperview()
+        //popUpKeys.forEach{$0.removeFromSuperview()}
+    }
 	
 	@objc func keyUntouched(_ sender: UIButton){
 		guard let isSpecial = sender.layer.value(forKey: "isSpecial") as? Bool else {return}
