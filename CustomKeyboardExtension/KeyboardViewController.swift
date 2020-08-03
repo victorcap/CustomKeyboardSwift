@@ -12,8 +12,9 @@ var proxy : UITextDocumentProxy!
 class KeyboardViewController: UIInputViewController {
 	
 	@IBOutlet var nextKeyboardButton: UIButton!
-	
-	var keyboardView: UIView!
+    @IBOutlet var keyboardView: UIView!
+    @IBOutlet var bradescoView: UIView!
+    
     var popUpView: UIView!
     var popUpLetters: UIStackView!
 	var keys: [UIButton] = []
@@ -40,11 +41,13 @@ class KeyboardViewController: UIInputViewController {
 	@IBOutlet weak var stackView2: UIStackView!
 	@IBOutlet weak var stackView3: UIStackView!
 	@IBOutlet weak var stackView4: UIStackView!
-	
+    @IBOutlet weak var labelBradesco: UILabel!
+    
 	override func updateViewConstraints() {
 		super.updateViewConstraints()
 		// Add custom view sizing constraints here
-		keyboardView.frame.size = view.frame.size 
+        keyboardView.frame.size = view.frame.size
+        //bradescoView.frame.size = view.frame.size
 	} 
 	
 	override func viewDidLoad() {
@@ -213,6 +216,16 @@ class KeyboardViewController: UIInputViewController {
 	func handlDeleteButtonPressed(){
 		proxy.deleteBackward()
 	}
+    
+    func changeToBradesco(){
+        bradescoView.frame.size = view.frame.size
+        
+        view.addSubview(bradescoView)
+    }
+    
+    @IBAction func voltarTeclado(_ sender: Any) {
+        view.addSubview(keyboardView)
+    }
 	
 	@IBAction func keyPressedTouchUp(_ sender: UIButton) {
 		guard let originalKey = sender.layer.value(forKey: "original") as? String, let keyToDisplay = sender.layer.value(forKey: "keyToDisplay") as? String else {return}
@@ -242,6 +255,8 @@ class KeyboardViewController: UIInputViewController {
 		case "⬆️": 
 			shiftButtonState = shiftButtonState == .normal ? .shift : .normal
 			loadKeys()
+        case "💰":
+            changeToBradesco()
 		default:
 			if shiftButtonState == .shift {
 				shiftButtonState = .normal

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KeyboardViewController" customModule="typEmoji" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KeyboardViewController" customModule="CustomKeyboardExtension" customModuleProvider="target">
             <connections>
+                <outlet property="bradescoView" destination="0f7-KN-GnT" id="6qQ-ff-an9"/>
+                <outlet property="keyboardView" destination="iN0-l3-epB" id="Cl3-at-xdO"/>
+                <outlet property="labelBradesco" destination="p9X-qg-g3U" id="NE5-7B-zSm"/>
                 <outlet property="stackView1" destination="xYB-wV-ziM" id="JkR-bw-8Kv"/>
                 <outlet property="stackView2" destination="OeW-Ji-4P7" id="a7s-Ms-BJq"/>
                 <outlet property="stackView3" destination="lVo-8I-Rya" id="mYm-0d-h7N"/>
@@ -72,6 +73,38 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="-762" y="53"/>
+        </view>
+        <view contentMode="scaleToFill" id="0f7-KN-GnT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bradesco Home" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p9X-qg-g3U">
+                    <rect key="frame" x="98.5" y="90" width="123" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Py8-5h-woj">
+                    <rect key="frame" x="111" y="119" width="98" height="30"/>
+                    <state key="normal" title="Voltar Teclado">
+                        <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleShadowColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="voltarTeclado:" destination="-1" eventType="touchDown" id="7Gm-Gr-8Zr"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.81923294069999997" green="0.82708883290000001" blue="0.85191726680000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Py8-5h-woj" firstAttribute="centerX" secondItem="DwO-cC-v83" secondAttribute="centerX" id="0T3-az-8C3"/>
+                <constraint firstItem="Py8-5h-woj" firstAttribute="top" secondItem="p9X-qg-g3U" secondAttribute="top" constant="29" id="Fkf-M1-756"/>
+                <constraint firstItem="p9X-qg-g3U" firstAttribute="centerX" secondItem="DwO-cC-v83" secondAttribute="centerX" id="bwC-cZ-9Iz"/>
+                <constraint firstItem="p9X-qg-g3U" firstAttribute="centerY" secondItem="DwO-cC-v83" secondAttribute="centerY" constant="-21.5" id="v3l-sv-SQV"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="DwO-cC-v83"/>
             <point key="canvasLocation" x="-243.47826086956525" y="51.5625"/>
         </view>
     </objects>
