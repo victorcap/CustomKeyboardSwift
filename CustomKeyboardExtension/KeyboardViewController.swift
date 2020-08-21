@@ -112,26 +112,48 @@ class KeyboardViewController: UIInputViewController {
 	}
     
     func attemptToReplaceCurrentWord() {
-      // 1
-      guard let entries = userLexicon?.entries,
-        let currentWord = currentWord?.lowercased() else {
-          return
-      }
-
-      // 2
-      let replacementEntries = entries.filter {
-        $0.userInput.lowercased() == currentWord
-      }
-
-      if let replacement = replacementEntries.first {
-        // 3
-        for _ in 0..<currentWord.count {
-          proxy.deleteBackward()
+        // 1
+        guard let entries = userLexicon?.entries,
+            let currentWord = currentWord?.lowercased() else {
+            return
         }
 
-        // 4
-        proxy.insertText(replacement.documentText)
-      }
+        // 2
+        let replacementEntries = entries.filter {
+            $0.userInput.lowercased() == currentWord
+        }
+
+        if let replacement = replacementEntries.first {
+            // 3
+            for _ in 0..<currentWord.count {
+                proxy.deleteBackward()
+            }
+
+            // 4
+            proxy.insertText(replacement.documentText)
+        }
+    }
+    
+    func predictionWords()
+    {
+        guard let currentWord = currentWord?.lowercased() else {
+            return
+        }
+        
+        let sugestionWords = self.autoSuggest(currentWord)
+        
+        let numSugestionWords = sugestionWords!.count
+        for words in 0..<numSugestionWords{
+            
+            let button = UIButton(type: .custom)
+            button.backgroundColor = Constants.keyNormalColour
+            button.setTitleColor(.black, for: .normal)
+            let palavra = sugestionWords![words]
+            button.setTitle(palavra, for: .normal)
+            button.layer.borderColor = keyboardView.backgroundColor?.cgColor
+            
+            stackView0.addArrangedSubview(button)
+        }
     }
 	
 	func addPadding(to stackView: UIStackView, width: CGFloat, key: String){
@@ -293,6 +315,7 @@ class KeyboardViewController: UIInputViewController {
 			handlDeleteButtonPressed()
 		case "space":
             attemptToReplaceCurrentWord()
+            //predictionWords()
 			proxy.insertText(" ")
 		case "🌐":
 			break
@@ -474,6 +497,16 @@ class KeyboardViewController: UIInputViewController {
 		}
 		self.nextKeyboardButton.setTitleColor(textColor, for: [])
 	}
+    
+    func autoSuggest(_ word: String) -> [String]? {
+        let textChecker = UITextChecker()
+        let availableLanguages = UITextChecker.availableLanguages
+        let preferredLanguage = (availableLanguages.count > 0 ? availableLanguages[0] : "en-US");
+        
+        let completions = textChecker.completions(forPartialWordRange: NSRange(0..<word.utf8.count), in: word, language: preferredLanguage)
+
+        return completions
+    }
     
 //    private func topArrowView() -> UIView {
 //        let arrowView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 8))
