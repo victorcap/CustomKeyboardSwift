@@ -15,12 +15,32 @@ class KeyboardViewController: UIInputViewController {
     @IBOutlet var keyboardView: UIView!
     @IBOutlet var bradescoView: UIView!
     
+    //let autoCorrectObject: AutoCorrect = AutoCorrect.init()
+    
     var popUpView: UIView!
     var popUpLetters: UIStackView!
 	var keys: [UIButton] = []
     var keyPressed: String = ""
 	var paddingViews: [UIButton] = []
 	var backspaceTimer: Timer?
+    var userLexicon: UILexicon?
+    
+    var currentWord: String? {
+        var lastWord: String?
+        // 1
+        if let stringBeforeCursor = textDocumentProxy.documentContextBeforeInput {
+            // 2
+            stringBeforeCursor.enumerateSubstrings(in: stringBeforeCursor.startIndex...,
+                                                   options: .byWords)
+            { word, _, _, _ in
+                // 3
+                if let word = word {
+                    lastWord = word
+                }
+            }
+        }
+        return lastWord
+    }
 	
 	enum KeyboardState{
 		case letters
@@ -37,7 +57,8 @@ class KeyboardViewController: UIInputViewController {
 	var keyboardState: KeyboardState = .letters
 	var shiftButtonState:ShiftButtonState = .normal
 	
-	@IBOutlet weak var stackView1: UIStackView!
+    @IBOutlet weak var stackView0: UIStackView!
+    @IBOutlet weak var stackView1: UIStackView!
 	@IBOutlet weak var stackView2: UIStackView!
 	@IBOutlet weak var stackView3: UIStackView!
 	@IBOutlet weak var stackView4: UIStackView!
@@ -57,6 +78,9 @@ class KeyboardViewController: UIInputViewController {
 		loadInterface()
 		self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
 		
+        requestSupplementaryLexicon { lexicon in
+          self.userLexicon = lexicon
+        }
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -70,18 +94,45 @@ class KeyboardViewController: UIInputViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		let heightConstraint = NSLayoutConstraint(item: view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 220)
+		let heightConstraint = NSLayoutConstraint(item: view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 270)
 		view.addConstraint(heightConstraint)
 		
 	}
 	
-	
 	func loadInterface(){
 		let keyboardNib = UINib(nibName: "Keyboard", bundle: nil)
-		keyboardView = keyboardNib.instantiate(withOwner: self, options: nil)[0] as? UIView		 		
+		keyboardView = keyboardNib.instantiate(withOwner: self, options: nil)[0] as? UIView
+        
+//        let bar = UIToolbar()
+//        bar.sizeToFit()
+//        SuggestionWords.inputAccessoryView = bar
+        
 		view.addSubview(keyboardView)
 		loadKeys()
 	}
+    
+    func attemptToReplaceCurrentWord() {
+      // 1
+      guard let entries = userLexicon?.entries,
+        let currentWord = currentWord?.lowercased() else {
+          return
+      }
+
+      // 2
+      let replacementEntries = entries.filter {
+        $0.userInput.lowercased() == currentWord
+      }
+
+      if let replacement = replacementEntries.first {
+        // 3
+        for _ in 0..<currentWord.count {
+          proxy.deleteBackward()
+        }
+
+        // 4
+        proxy.insertText(replacement.documentText)
+      }
+    }
 	
 	func addPadding(to stackView: UIStackView, width: CGFloat, key: String){
 		let padding = UIButton(frame: CGRect(x: 0, y: 0, width: 5, height: 5))
@@ -241,6 +292,7 @@ class KeyboardViewController: UIInputViewController {
 			}
 			handlDeleteButtonPressed()
 		case "space":
+            attemptToReplaceCurrentWord()
 			proxy.insertText(" ")
 		case "🌐":
 			break
@@ -422,5 +474,26 @@ class KeyboardViewController: UIInputViewController {
 		}
 		self.nextKeyboardButton.setTitleColor(textColor, for: [])
 	}
+    
+//    private func topArrowView() -> UIView {
+//        let arrowView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 8))
+//        arrowView.translatesAutoresizingMaskIntoConstraints = false
+//
+//        let arrowHeight = arrowView.frame.height
+//        let arrowWidth = arrowView.frame.width
+//
+//        let path = CGMutablePath()
+//        path.move(to: CGPoint(x: 0, y: arrowHeight))
+//        path.addLine(to: CGPoint(x: arrowWidth / 2, y: 0))
+//        path.addLine(to: CGPoint(x: arrowWidth, y: arrowHeight))
+//        path.addLine(to: CGPoint(x: 0, y: arrowHeight))
+//
+//        let shape = CAShapeLayer()
+//        shape.path = path
+//        shape.fillColor = UIColor.white.cgColor
+//
+//        arrowView.layer.insertSublayer(shape, at: 0)
+//        return arrowView
+//    }
 	
 }
