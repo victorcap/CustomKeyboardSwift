@@ -19,7 +19,8 @@ class KeyboardViewController: UIInputViewController {
     
     var popUpView: UIView!
     var popUpLetters: UIStackView!
-	var keys: [UIButton] = []
+    var keys: [UIButton] = []
+    var suggestedKeys: [UIButton] = []
     var keyPressed: String = ""
 	var paddingViews: [UIButton] = []
 	var backspaceTimer: Timer?
@@ -81,28 +82,6 @@ class KeyboardViewController: UIInputViewController {
         requestSupplementaryLexicon { lexicon in
             self.userLexicon = lexicon
         }
-        
-        let items: [String] = ["Teste 01", "Teste 02",  "Teste 03"]
-        
-        let numRows = items.count
-        for row in 0...numRows - 1 {
-            if stackView0.arrangedSubviews.count > 0 {
-                let separator = UIView()
-                separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
-                separator.backgroundColor = .lightGray
-                stackView0.addArrangedSubview(separator)
-                separator.heightAnchor.constraint(equalTo: stackView0.heightAnchor, multiplier: 0.4).isActive = true
-            }
-            
-            let button = UIButton(type: .custom)
-            let key = items[row]
-            button.layer.setValue(key, forKey: "original")
-            button.setTitle(key, for: .normal)
-            button.setTitleColor(.darkGray, for: .normal)
-            button.addTarget(self, action: #selector(suggestionKeyPressedTouchUp), for: .touchUpInside)
-
-            stackView0.addArrangedSubview(button)
-        }
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -154,23 +133,42 @@ class KeyboardViewController: UIInputViewController {
     
     func predictionWords()
     {
+        suggestedKeys.forEach{$0.removeFromSuperview()}
+        stackView0.subviews.forEach({$0.removeFromSuperview()})
+        
         guard let currentWord = currentWord?.lowercased() else {
             return
         }
         
-        let sugestionWords = self.autoSuggest(currentWord)
-        
-        let numSugestionWords = sugestionWords!.count
-        for words in 0..<numSugestionWords{
+        if let items = self.autoSuggest(currentWord) {
+            var numItems = items.count
             
-            let button = UIButton(type: .custom)
-            button.backgroundColor = Constants.keyNormalColour
-            button.setTitleColor(.black, for: .normal)
-            let palavra = sugestionWords![words]
-            button.setTitle(palavra, for: .normal)
-            button.layer.borderColor = keyboardView.backgroundColor?.cgColor
-            
-            stackView0.addArrangedSubview(button)
+            if numItems > 0 {
+                
+                if numItems > 2 {
+                    numItems = 3
+                }
+                
+                for row in 0...numItems - 1 {
+                    if stackView0.arrangedSubviews.count > 0 {
+                        let separator = UIView()
+                        separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
+                        separator.backgroundColor = .lightGray
+                        stackView0.addArrangedSubview(separator)
+                        separator.heightAnchor.constraint(equalTo: stackView0.heightAnchor, multiplier: 0.4).isActive = true
+                    }
+                    
+                    let button = UIButton(type: .custom)
+                    let key = items[row]
+                    button.layer.setValue(key, forKey: "original")
+                    button.setTitle(key, for: .normal)
+                    button.setTitleColor(.darkGray, for: .normal)
+                    button.addTarget(self, action: #selector(suggestionKeyPressedTouchUp), for: .touchUpInside)
+
+                    suggestedKeys.append(button)
+                    stackView0.addArrangedSubview(button)
+                }
+            }
         }
     }
 	
@@ -333,7 +331,6 @@ class KeyboardViewController: UIInputViewController {
 			handlDeleteButtonPressed()
 		case "space":
             attemptToReplaceCurrentWord()
-            //predictionWords()
 			proxy.insertText(" ")
 		case "🌐":
 			break
@@ -356,11 +353,18 @@ class KeyboardViewController: UIInputViewController {
 				loadKeys()
 			}
 			proxy.insertText(keyToDisplay)
+            predictionWords()
 		}
 	}
     
     @IBAction func suggestionKeyPressedTouchUp(_ sender: UIButton) {
         guard let originalKey = sender.layer.value(forKey: "original") as? String else {return}
+        
+        guard let currentWord = self.currentWord?.lowercased() else { return }
+        
+        for _ in 0..<currentWord.count {
+            proxy.deleteBackward()
+        }
         
         proxy.insertText(originalKey)
     }
