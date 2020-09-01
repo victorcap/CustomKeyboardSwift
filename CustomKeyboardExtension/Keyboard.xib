@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,6 +13,7 @@
                 <outlet property="bradescoView" destination="0f7-KN-GnT" id="6qQ-ff-an9"/>
                 <outlet property="keyboardView" destination="iN0-l3-epB" id="Cl3-at-xdO"/>
                 <outlet property="labelBradesco" destination="p9X-qg-g3U" id="NE5-7B-zSm"/>
+                <outlet property="stackView0" destination="I9s-F0-Bnk" id="bOF-m6-VQf"/>
                 <outlet property="stackView1" destination="xYB-wV-ziM" id="JkR-bw-8Kv"/>
                 <outlet property="stackView2" destination="OeW-Ji-4P7" id="a7s-Ms-BJq"/>
                 <outlet property="stackView3" destination="lVo-8I-Rya" id="mYm-0d-h7N"/>
@@ -24,9 +25,8 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="270"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="I9s-F0-Bnk" userLabel="Stack View0">
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="I9s-F0-Bnk">
                     <rect key="frame" x="3" y="0.0" width="314" height="54"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </stackView>
                 <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="xYB-wV-ziM">
                     <rect key="frame" x="3" y="54" width="314" height="54"/>
@@ -63,7 +63,9 @@
                 <constraint firstItem="xYB-wV-ziM" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="54" id="6TA-RG-ZaR"/>
                 <constraint firstItem="lVo-8I-Rya" firstAttribute="height" secondItem="OeW-Ji-4P7" secondAttribute="height" id="8Pe-Bi-S2n"/>
                 <constraint firstItem="Y6B-bi-XMS" firstAttribute="centerX" secondItem="lVo-8I-Rya" secondAttribute="centerX" id="93O-SJ-Lhm"/>
+                <constraint firstItem="I9s-F0-Bnk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="BTG-IG-Wug"/>
                 <constraint firstItem="Y6B-bi-XMS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="bottom" multiplier="0.75" constant="13.5" id="EKj-OG-qjw"/>
+                <constraint firstItem="xYB-wV-ziM" firstAttribute="top" secondItem="I9s-F0-Bnk" secondAttribute="bottom" id="G75-du-QAF"/>
                 <constraint firstItem="OeW-Ji-4P7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="bottom" multiplier="0.2" constant="54" id="Hox-vk-NRQ"/>
                 <constraint firstItem="Y6B-bi-XMS" firstAttribute="width" secondItem="lVo-8I-Rya" secondAttribute="width" id="JPN-X5-ELE"/>
                 <constraint firstItem="Y6B-bi-XMS" firstAttribute="height" secondItem="lVo-8I-Rya" secondAttribute="height" id="Nm9-Or-EXN"/>
@@ -72,8 +74,10 @@
                 <constraint firstItem="xYB-wV-ziM" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" constant="-3" id="Rfm-bW-pyV"/>
                 <constraint firstItem="lVo-8I-Rya" firstAttribute="centerX" secondItem="OeW-Ji-4P7" secondAttribute="centerX" id="X4Z-GR-YAf"/>
                 <constraint firstItem="lVo-8I-Rya" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="bottom" multiplier="0.5" constant="27" id="bQP-Oc-Dvz"/>
+                <constraint firstItem="I9s-F0-Bnk" firstAttribute="width" secondItem="xYB-wV-ziM" secondAttribute="width" id="mkG-9U-tRb"/>
                 <constraint firstItem="OeW-Ji-4P7" firstAttribute="height" secondItem="xYB-wV-ziM" secondAttribute="height" id="qnr-jX-Vl0"/>
                 <constraint firstItem="lVo-8I-Rya" firstAttribute="width" secondItem="OeW-Ji-4P7" secondAttribute="width" id="tme-WK-QNd"/>
+                <constraint firstItem="I9s-F0-Bnk" firstAttribute="leading" secondItem="xYB-wV-ziM" secondAttribute="leading" id="zAD-ls-UIh"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
@@ -92,7 +96,7 @@
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Py8-5h-woj">
                     <rect key="frame" x="111" y="119" width="98" height="30"/>
                     <state key="normal" title="Voltar Teclado">
-                        <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" cocoaTouchSystemColor="darkTextColor"/>
                     </state>
                     <connections>

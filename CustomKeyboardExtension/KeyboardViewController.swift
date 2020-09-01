@@ -79,7 +79,29 @@ class KeyboardViewController: UIInputViewController {
 		self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
 		
         requestSupplementaryLexicon { lexicon in
-          self.userLexicon = lexicon
+            self.userLexicon = lexicon
+        }
+        
+        let items: [String] = ["Teste 01", "Teste 02",  "Teste 03"]
+        
+        let numRows = items.count
+        for row in 0...numRows - 1 {
+            if stackView0.arrangedSubviews.count > 0 {
+                let separator = UIView()
+                separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
+                separator.backgroundColor = .lightGray
+                stackView0.addArrangedSubview(separator)
+                separator.heightAnchor.constraint(equalTo: stackView0.heightAnchor, multiplier: 0.4).isActive = true
+            }
+            
+            let button = UIButton(type: .custom)
+            let key = items[row]
+            button.layer.setValue(key, forKey: "original")
+            button.setTitle(key, for: .normal)
+            button.setTitleColor(.darkGray, for: .normal)
+            button.addTarget(self, action: #selector(suggestionKeyPressedTouchUp), for: .touchUpInside)
+
+            stackView0.addArrangedSubview(button)
         }
 	}
 	
@@ -102,10 +124,6 @@ class KeyboardViewController: UIInputViewController {
 	func loadInterface(){
 		let keyboardNib = UINib(nibName: "Keyboard", bundle: nil)
 		keyboardView = keyboardNib.instantiate(withOwner: self, options: nil)[0] as? UIView
-        
-//        let bar = UIToolbar()
-//        bar.sizeToFit()
-//        SuggestionWords.inputAccessoryView = bar
         
 		view.addSubview(keyboardView)
 		loadKeys()
@@ -340,6 +358,12 @@ class KeyboardViewController: UIInputViewController {
 			proxy.insertText(keyToDisplay)
 		}
 	}
+    
+    @IBAction func suggestionKeyPressedTouchUp(_ sender: UIButton) {
+        guard let originalKey = sender.layer.value(forKey: "original") as? String else {return}
+        
+        proxy.insertText(originalKey)
+    }
 	
 	@objc func keyMultiPress(_ sender: UIButton, event: UIEvent){
 		guard let originalKey = sender.layer.value(forKey: "original") as? String else {return}
@@ -432,7 +456,7 @@ class KeyboardViewController: UIInputViewController {
                 popUpLetters.setNeedsLayout()
                 popUpLetters.layoutIfNeeded()
                 
-                proxy.insertText("\n \(popUpLetters.frame)")
+                //proxy.insertText("\n \(popUpLetters.frame)")
                 
                 //popUpView=UIView(frame: CGRect(x: tapLocation.x-10, y: tapLocation.y-65, width: 100, height: 40))
                 
@@ -529,4 +553,40 @@ class KeyboardViewController: UIInputViewController {
 //        return arrowView
 //    }
 	
+}
+
+extension UIStackView {
+    func addHorizontalSeparators(color : UIColor) {
+        var i = self.arrangedSubviews.count
+        while i >= 0 {
+            let separator = createSeparator(color: color)
+            insertArrangedSubview(separator, at: i)
+            separator.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1).isActive = true
+            i -= 1
+        }
+    }
+
+    private func createSeparator(color : UIColor) -> UIView {
+        let separator = UIView()
+        separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separator.backgroundColor = color
+        return separator
+    }
+    
+    func addVerticalSeparators(color : UIColor) {
+        var i = self.arrangedSubviews.count
+        while i > 1 {
+            let separator = verticalCreateSeparator(color: color)
+            insertArrangedSubview(separator, at: i-1)   // (i-1) for centers only
+            separator.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1).isActive = true
+            i -= 1
+        }
+    }
+
+    private func verticalCreateSeparator(color : UIColor) -> UIView {
+        let separator = UIView()
+        separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        separator.backgroundColor = color
+        return separator
+    }
 }
