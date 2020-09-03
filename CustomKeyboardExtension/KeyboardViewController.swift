@@ -15,8 +15,6 @@ class KeyboardViewController: UIInputViewController {
     @IBOutlet var keyboardView: UIView!
     @IBOutlet var bradescoView: UIView!
     
-    //let autoCorrectObject: AutoCorrect = AutoCorrect.init()
-    
     var popUpView: UIView!
     var popUpLetters: UIStackView!
     var keys: [UIButton] = []
@@ -28,13 +26,11 @@ class KeyboardViewController: UIInputViewController {
     
     var currentWord: String? {
         var lastWord: String?
-        // 1
+
         if let stringBeforeCursor = textDocumentProxy.documentContextBeforeInput {
-            // 2
             stringBeforeCursor.enumerateSubstrings(in: stringBeforeCursor.startIndex...,
                                                    options: .byWords)
             { word, _, _, _ in
-                // 3
                 if let word = word {
                     lastWord = word
                 }
@@ -69,7 +65,6 @@ class KeyboardViewController: UIInputViewController {
 		super.updateViewConstraints()
 		// Add custom view sizing constraints here
         keyboardView.frame.size = view.frame.size
-        //bradescoView.frame.size = view.frame.size
 	} 
 	
 	override func viewDidLoad() {
@@ -109,24 +104,20 @@ class KeyboardViewController: UIInputViewController {
 	}
     
     func attemptToReplaceCurrentWord() {
-        // 1
         guard let entries = userLexicon?.entries,
             let currentWord = currentWord?.lowercased() else {
             return
         }
 
-        // 2
         let replacementEntries = entries.filter {
             $0.userInput.lowercased() == currentWord
         }
 
         if let replacement = replacementEntries.first {
-            // 3
             for _ in 0..<currentWord.count {
                 proxy.deleteBackward()
             }
 
-            // 4
             proxy.insertText(replacement.documentText)
         }
     }
@@ -229,14 +220,16 @@ class KeyboardViewController: UIInputViewController {
 				button.addTarget(self, action: #selector(keyTouchDown), for: .touchDown)
 				button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
 				button.addTarget(self, action: #selector(keyMultiPress(_:event:)), for: .touchDownRepeat)
-
-                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
-                button.addGestureRecognizer(longPressRecognizer)
                 
-//				if key == "⌫"{
-//					let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
-//					button.addGestureRecognizer(longPressRecognizer)
-//				}
+                if key != "🌐" && key != "💰" && key != "↩" && key != "#+=" && key != "ABC" && key != "123" && key != "⬆️" && key != "space" {
+                    if key == "⌫"{
+                        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(backspaceKeyLongPressed(_:)))
+                        button.addGestureRecognizer(longPressRecognizer)
+                    }
+                    
+                    let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
+                    button.addGestureRecognizer(longPressRecognizer)
+                }
 				
 				button.layer.cornerRadius = buttonWidth/4
 				keys.append(button)
@@ -252,8 +245,6 @@ class KeyboardViewController: UIInputViewController {
 					nextKeyboardButton = button
 				}
 				
-				//top row is longest row so it should decide button width 
-				print("button width: ", buttonWidth)
 				if key == "⌫" || key == "💰" || key == "↩" || key == "#+=" || key == "ABC" || key == "123" || key == "⬆️" || key == "🌐"{
 					button.widthAnchor.constraint(equalToConstant: buttonWidth + buttonWidth/2).isActive = true
 					button.layer.setValue(true, forKey: "isSpecial")
@@ -276,7 +267,6 @@ class KeyboardViewController: UIInputViewController {
 				}
 			}
 		} 
-		
 		
 		//end padding
 		switch keyboardState {
@@ -377,7 +367,19 @@ class KeyboardViewController: UIInputViewController {
 			shiftButtonState = .caps
 			loadKeys()
 		}
-	}	
+	}
+    
+    @objc func backspaceKeyLongPressed(_ gesture: UIGestureRecognizer){
+        if gesture.state == .began {
+            backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { (timer) in
+                self.handlDeleteButtonPressed()
+            }
+        } else if gesture.state == .ended || gesture.state == .cancelled {
+            backspaceTimer?.invalidate()
+            backspaceTimer = nil
+            (gesture.view as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+        }
+    }
 	
 	@objc func keyLongPressed(_ gesture: UIGestureRecognizer){
 		if gesture.state == .began {
@@ -460,10 +462,6 @@ class KeyboardViewController: UIInputViewController {
                 popUpLetters.setNeedsLayout()
                 popUpLetters.layoutIfNeeded()
                 
-                //proxy.insertText("\n \(popUpLetters.frame)")
-                
-                //popUpView=UIView(frame: CGRect(x: tapLocation.x-10, y: tapLocation.y-65, width: 100, height: 40))
-                
                 //PopUpView
                 popUpView=UIView(frame: CGRect(x: tapLocation.x-10, y: tapLocation.y-65, width: popUpLetters.frame.size.width, height: popUpLetters.frame.size.height))
                 popUpView.backgroundColor=keyboardView.backgroundColor
@@ -515,7 +513,6 @@ class KeyboardViewController: UIInputViewController {
 	
 	override func textDidChange(_ textInput: UITextInput?) {
 		// The app has just changed the document's contents, the document context has been updated.
-		
 		var textColor: UIColor
 		let proxy = self.textDocumentProxy
 		if proxy.keyboardAppearance == UIKeyboardAppearance.dark {
@@ -528,35 +525,12 @@ class KeyboardViewController: UIInputViewController {
     
     func autoSuggest(_ word: String) -> [String]? {
         let textChecker = UITextChecker()
-        let availableLanguages = UITextChecker.availableLanguages
-        let preferredLanguage = (availableLanguages.count > 0 ? availableLanguages[0] : "en-US");
+        let preferredLanguage = "pt_BR"
         
         let completions = textChecker.completions(forPartialWordRange: NSRange(0..<word.utf8.count), in: word, language: preferredLanguage)
 
         return completions
     }
-    
-//    private func topArrowView() -> UIView {
-//        let arrowView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 8))
-//        arrowView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        let arrowHeight = arrowView.frame.height
-//        let arrowWidth = arrowView.frame.width
-//
-//        let path = CGMutablePath()
-//        path.move(to: CGPoint(x: 0, y: arrowHeight))
-//        path.addLine(to: CGPoint(x: arrowWidth / 2, y: 0))
-//        path.addLine(to: CGPoint(x: arrowWidth, y: arrowHeight))
-//        path.addLine(to: CGPoint(x: 0, y: arrowHeight))
-//
-//        let shape = CAShapeLayer()
-//        shape.path = path
-//        shape.fillColor = UIColor.white.cgColor
-//
-//        arrowView.layer.insertSublayer(shape, at: 0)
-//        return arrowView
-//    }
-	
 }
 
 extension UIStackView {
