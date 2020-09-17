@@ -157,25 +157,9 @@ extension UIView {
         gradient.frame = self.bounds
         gradient.colors = colours.map { $0.cgColor }
         gradient.startPoint = CGPoint(x : 0.0, y : 0.5)
-        gradient.endPoint = CGPoint(x :1.0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1, y: 0.5)
         self.layer.insertSublayer(gradient, at: 0)
     }
-    
-//    private func setupGradientLayer() {
-//        let gradientLayer = CAGradientLayer()
-//
-//        gradientLayer.frame = stackView0.bounds
-//
-//        let firstColor = UIColor(red: 243/255.0, green: 28/255.0, blue: 92/255.0, alpha: 1)
-//        let secondColor = UIColor(red: 222/255.0, green: 28/255.0, blue: 66/255.0, alpha: 1)
-//        let thirdColor = UIColor(red: 185/255.0, green: 27/255.0, blue: 115/255.0, alpha: 1)
-//
-//        gradientLayer.colors = [firstColor.cgColor, secondColor.cgColor, thirdColor.cgColor]
-//        gradientLayer.locations = [0.0, 0.51, 1]
-//        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-//        gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-//        stackView0.layer.addSublayer(gradientLayer)
-//    }
 }
 
 extension UIStackView {

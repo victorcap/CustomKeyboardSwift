@@ -54,6 +54,7 @@ class KeyboardViewController: UIInputViewController {
 	var keyboardState: KeyboardState = .letters
 	var shiftButtonState:ShiftButtonState = .normal
 	
+    @IBOutlet weak var suggestionColorBar: UIView!
     @IBOutlet weak var stackView0: UIStackView!
     @IBOutlet weak var stackView1: UIStackView!
 	@IBOutlet weak var stackView2: UIStackView!
@@ -78,7 +79,7 @@ class KeyboardViewController: UIInputViewController {
             self.userLexicon = lexicon
         }
         
-        self.stackView0.applyGradient(colours: [Constants.gradientFirstColorClassic, Constants.gradientSecondColorClassic, Constants.gradienteThirdColorClassic])
+        self.suggestionColorBar.applyGradient(colours: [Constants.gradientFirstColorClassic, Constants.gradientSecondColorClassic, Constants.gradienteThirdColorClassic, Constants.gradienteFourthColorClassic, Constants.gradienteFifthColorClassic])
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -206,22 +207,27 @@ class KeyboardViewController: UIInputViewController {
 			for col in 0...keyboard[row].count - 1{
 				let button = UIButton(type: .custom)
 				button.backgroundColor = Constants.keyNormalColour
-				button.setTitleColor(.black, for: .normal) 
+				button.setTitleColor(.black, for: .normal)
                 let key = keyboard[row][col]
 				let capsKey = key.capitalized
 				let keyToDisplay = shiftButtonState == .normal ? key : capsKey
+//                button.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
+//                button.layer.shadowOffset = CGSize(width: 0, height: 1)
+//                button.layer.shadowOpacity = 0.5
+//                button.layer.shadowRadius = 0.0
+                button.layer.masksToBounds = false
 				button.layer.setValue(key, forKey: "original")
 				button.layer.setValue(keyToDisplay, forKey: "keyToDisplay")
 				button.layer.setValue(false, forKey: "isSpecial")
 				button.setTitle(keyToDisplay, for: .normal)
-				button.layer.borderColor = keyboardView.backgroundColor?.cgColor 
-				button.layer.borderWidth = 4
+				button.layer.borderColor = keyboardView.backgroundColor?.cgColor
+				button.layer.borderWidth = 3
 				button.addTarget(self, action: #selector(keyPressedTouchUp), for: .touchUpInside)
 				button.addTarget(self, action: #selector(keyTouchDown), for: .touchDown)
 				button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
 				button.addTarget(self, action: #selector(keyMultiPress(_:event:)), for: .touchDownRepeat)
                 
-                if key != "🌐" && key != "💰" && key != "↩" && key != "#+=" && key != "ABC" && key != "123" && key != "⬆️" && key != "space" {
+                if key != "🌐" && key != "💰" && key != "Retorno" && key != "#+=" && key != "ABC" && key != "123" && key != "⬆️" && key != "space" {
                     if key == "⌫"{
                         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(backspaceKeyLongPressed(_:)))
                         button.addGestureRecognizer(longPressRecognizer)
@@ -233,21 +239,11 @@ class KeyboardViewController: UIInputViewController {
                     }
                 }
 				
-				button.layer.cornerRadius = buttonWidth/4
-				keys.append(button)
-				switch row{
-				case 0: stackView1.addArrangedSubview(button)
-				case 1: stackView2.addArrangedSubview(button)
-				case 2: stackView3.addArrangedSubview(button)
-				case 3: stackView4.addArrangedSubview(button)
-				default:
-					break
-				}
 				if key == "🌐"{
 					nextKeyboardButton = button
 				}
-				
-				if key == "⌫" || key == "💰" || key == "↩" || key == "#+=" || key == "ABC" || key == "123" || key == "⬆️" || key == "🌐"{
+                
+				if key == "⌫" || key == "💰" || key == "#+=" || key == "ABC" || key == "123" || key == "⬆️" || key == "🌐"{
 					button.widthAnchor.constraint(equalToConstant: buttonWidth + buttonWidth/2).isActive = true
 					button.layer.setValue(true, forKey: "isSpecial")
 					button.backgroundColor = Constants.specialKeyNormalColour
@@ -259,14 +255,50 @@ class KeyboardViewController: UIInputViewController {
 							button.setTitle("⏫", for: .normal)
 						}
 					}
-				}else if (keyboardState == .numbers || keyboardState == .symbols) && row == 2{
+				}else if key == "Retorno"{
+                    button.widthAnchor.constraint(equalToConstant: buttonWidth * 2).isActive = true
+                    button.layer.setValue(true, forKey: "isSpecial")
+                    //button.backgroundColor = .red
+                    
+//                    let gradientLayer = CAGradientLayer()
+//
+//                    gradientLayer.frame = button.bounds
+//
+//                    gradientLayer.colors = [Constants.gradientFirstColorReturnClassic, Constants.gradientSecondColorReturnClassic, Constants.gradientThirdColorReturnClassic]
+//
+//                    //Vertical
+//                    //gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+//                    //gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
+//
+//                    //Horizontal
+//                    gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
+//                    gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.0)
+//
+//                    gradientLayer.locations = [0.0, 1.0]
+//
+//                    button.layer.insertSublayer(gradientLayer, at: 0)
+//
+                    
+                    button.applyGradient(colours: [Constants.gradientFirstColorReturnClassic, Constants.gradientSecondColorReturnClassic, Constants.gradientThirdColorReturnClassic])
+                }else if (keyboardState == .numbers || keyboardState == .symbols) && row == 2{
 					button.widthAnchor.constraint(equalToConstant: buttonWidth * 1.4).isActive = true
 				}else if key != "space"{
-					button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true					
-				}else{
+                        button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
+                }else{
 					button.layer.setValue(key, forKey: "original")
 					button.setTitle(key, for: .normal)
 				}
+                
+                button.layer.cornerRadius = buttonWidth/4
+                keys.append(button)
+                switch row{
+                case 0: stackView1.addArrangedSubview(button)
+                case 1: stackView2.addArrangedSubview(button)
+                case 2: stackView3.addArrangedSubview(button)
+                case 3: stackView4.addArrangedSubview(button)
+                default:
+                    break
+                }
 			}
 		} 
 		
@@ -326,7 +358,7 @@ class KeyboardViewController: UIInputViewController {
 			proxy.insertText(" ")
 		case "🌐":
 			break
-		case "↩":
+		case "Retorno":
 			proxy.insertText("\n")
 		case "123":
 			changeKeyboardToNumberKeys()
@@ -390,6 +422,10 @@ class KeyboardViewController: UIInputViewController {
                 //popUpKeys.forEach{$0.removeFromSuperview()}
                 popUpView.removeFromSuperview()
             }
+            
+            let buttonHeightOriginal = (gesture.view as! UIButton).frame.size.height
+            
+            proxy.insertText("\(buttonHeightOriginal)")
             
             var popUpKeys: [UIButton] = []
             
