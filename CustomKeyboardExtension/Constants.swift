@@ -53,4 +53,8 @@ enum Constants{
     static let extrasLettersC = ["c", "ç", "ć", "č"]
     
     static let extrasLettersN = ["n", "ñ", "ń"]
+    
+    static let gradientFirstColorClassic = UIColor(red: 243/255.0, green: 28/255.0, blue: 92/255.0, alpha: 1)
+    static let gradientSecondColorClassic = UIColor(red: 222/255.0, green: 28/255.0, blue: 66/255.0, alpha: 1)
+    static let gradienteThirdColorClassic = UIColor(red: 185/255.0, green: 27/255.0, blue: 115/255.0, alpha: 1)
 }

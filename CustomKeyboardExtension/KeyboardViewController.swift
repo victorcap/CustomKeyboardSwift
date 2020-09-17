@@ -77,6 +77,8 @@ class KeyboardViewController: UIInputViewController {
         requestSupplementaryLexicon { lexicon in
             self.userLexicon = lexicon
         }
+        
+        self.stackView0.applyGradient(colours: [Constants.gradientFirstColorClassic, Constants.gradientSecondColorClassic, Constants.gradienteThirdColorClassic])
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -122,8 +124,7 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    func predictionWords()
-    {
+    func predictionWords() {
         suggestedKeys.forEach{$0.removeFromSuperview()}
         stackView0.subviews.forEach({$0.removeFromSuperview()})
         
@@ -135,7 +136,6 @@ class KeyboardViewController: UIInputViewController {
             var numItems = items.count
             
             if numItems > 0 {
-                
                 if numItems > 2 {
                     numItems = 3
                 }
@@ -226,9 +226,11 @@ class KeyboardViewController: UIInputViewController {
                         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(backspaceKeyLongPressed(_:)))
                         button.addGestureRecognizer(longPressRecognizer)
                     }
-                    
-                    let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
-                    button.addGestureRecognizer(longPressRecognizer)
+                    else
+                    {
+                        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(keyLongPressed(_:)))
+                        button.addGestureRecognizer(longPressRecognizer)
+                    }
                 }
 				
 				button.layer.cornerRadius = buttonWidth/4
@@ -472,31 +474,17 @@ class KeyboardViewController: UIInputViewController {
                 popUpView.setNeedsLayout()
                 popUpView.layoutIfNeeded()
                 popUpView.addSubview(popUpLetters)
+                popUpView.addPikeOnView(side: .Bottom)
                 
                 self.view.addSubview(popUpView)
             }
 
-//			backspaceTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { (timer) in
-//				self.handlDeleteButtonPressed()
-//			}
 		} else if gesture.state == .ended || gesture.state == .cancelled {
             //popUpKeys.forEach{$0.removeFromSuperview()}
             popUpView.removeFromSuperview()
             (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
-//			backspaceTimer?.invalidate()
-//			backspaceTimer = nil
-//			(gesture.view as! UIButton).backgroundColor = Constants.specialKeyNormalColour
 		}
 	}
-    
-    @objc func extraButtonAction(sender: Any) {
-
-        print("Entrou aqui")
-
-        //Than remove popView
-        popUpView.removeFromSuperview()
-        //popUpKeys.forEach{$0.removeFromSuperview()}
-    }
 	
 	@objc func keyUntouched(_ sender: UIButton){
 		guard let isSpecial = sender.layer.value(forKey: "isSpecial") as? Bool else {return}
@@ -530,41 +518,5 @@ class KeyboardViewController: UIInputViewController {
         let completions = textChecker.completions(forPartialWordRange: NSRange(0..<word.utf8.count), in: word, language: preferredLanguage)
 
         return completions
-    }
-}
-
-extension UIStackView {
-    func addHorizontalSeparators(color : UIColor) {
-        var i = self.arrangedSubviews.count
-        while i >= 0 {
-            let separator = createSeparator(color: color)
-            insertArrangedSubview(separator, at: i)
-            separator.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1).isActive = true
-            i -= 1
-        }
-    }
-
-    private func createSeparator(color : UIColor) -> UIView {
-        let separator = UIView()
-        separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separator.backgroundColor = color
-        return separator
-    }
-    
-    func addVerticalSeparators(color : UIColor) {
-        var i = self.arrangedSubviews.count
-        while i > 1 {
-            let separator = verticalCreateSeparator(color: color)
-            insertArrangedSubview(separator, at: i-1)   // (i-1) for centers only
-            separator.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1).isActive = true
-            i -= 1
-        }
-    }
-
-    private func verticalCreateSeparator(color : UIColor) -> UIView {
-        let separator = UIView()
-        separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
-        separator.backgroundColor = color
-        return separator
     }
 }
