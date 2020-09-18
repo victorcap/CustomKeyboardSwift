@@ -244,14 +244,14 @@ class KeyboardViewController: UIInputViewController {
 				
 				if key == "🌐"{
 					nextKeyboardButton = button
-                    button.layer.setValue(true, forKey: "isSpecial")
+                    button.layer.setValue(false, forKey: "isSpecial")
                     button.backgroundColor = Constants.keyNormalColour
                     button.setTitle("", for: .normal)
                     button.setImage(UIImage(named: "ico_globe"), for: .normal)
 				}
                 
                 if key == "Bradesco" {
-                    button.layer.setValue(true, forKey: "isSpecial")
+                    button.layer.setValue(false, forKey: "isSpecial")
                     button.backgroundColor = Constants.keyNormalColour
                     button.setTitle("", for: .normal)
                     button.setImage(UIImage(named: "ico_bradesco_classic"), for: .normal)
@@ -266,6 +266,7 @@ class KeyboardViewController: UIInputViewController {
                         button.backgroundColor = Constants.keyNormalColour
                         button.setTitle("", for: .normal)
                         button.setImage(UIImage(named: "ico_arrow"), for: .normal)
+                        button.layer.setValue(false, forKey: "isSpecial")
                         
 						if shiftButtonState != .normal{
                             button.setImage(UIImage(named: "ico_arrow_selected"), for: .normal)

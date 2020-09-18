@@ -65,7 +65,7 @@ enum Constants{
     
     //Gradiente botão RETORNO
     //CLASSIC
-    static let gradientFirstColorReturnClassic = UIColor(red: 184/255.0, green: 14/255.0, blue: 128/255.0, alpha: 1)
+    static let gradientFirstColorReturnClassic = UIColor(red: 238/255.0, green: 78/255.0, blue: 105/255.0, alpha: 1)
     static let gradientSecondColorReturnClassic = UIColor(red: 209/255.0, green: 6/255.0, blue: 46/255.0, alpha: 1)
-    static let gradientThirdColorReturnClassic = UIColor(red: 238/255.0, green: 78/255.0, blue: 105/255.0, alpha: 1)
+    static let gradientThirdColorReturnClassic = UIColor(red: 184/255.0, green: 14/255.0, blue: 128/255.0, alpha: 1)
 }
