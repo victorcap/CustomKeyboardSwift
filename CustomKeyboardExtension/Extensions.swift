@@ -158,6 +158,7 @@ extension UIView {
         gradient.colors = colours.map { $0.cgColor }
         gradient.startPoint = CGPoint(x : 0.0, y : 0.5)
         gradient.endPoint = CGPoint(x: 1, y: 0.5)
+        gradient.cornerRadius = self.layer.cornerRadius;
         self.layer.insertSublayer(gradient, at: 0)
     }
 }

@@ -17,6 +17,7 @@
 		38BD215922D5935A00C6795D /* Keyboard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38BD215822D5935A00C6795D /* Keyboard.xib */; };
 		38BD215B22D5A26900C6795D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BD215A22D5A26900C6795D /* Constants.swift */; };
 		38DD94F122D6A40000FF8845 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DD94F022D6A40000FF8845 /* Extensions.swift */; };
+		677D4BA7251516000027D404 /* KeyboardAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 677D4BA6251516000027D404 /* KeyboardAssets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		38BD215822D5935A00C6795D /* Keyboard.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Keyboard.xib; sourceTree = "<group>"; };
 		38BD215A22D5A26900C6795D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		38DD94F022D6A40000FF8845 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		677D4BA6251516000027D404 /* KeyboardAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = KeyboardAssets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				38BD215822D5935A00C6795D /* Keyboard.xib */,
 				38BD215A22D5A26900C6795D /* Constants.swift */,
 				38DD94F022D6A40000FF8845 /* Extensions.swift */,
+				677D4BA6251516000027D404 /* KeyboardAssets.xcassets */,
 			);
 			path = CustomKeyboardExtension;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38BD215922D5935A00C6795D /* Keyboard.xib in Resources */,
+				677D4BA7251516000027D404 /* KeyboardAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

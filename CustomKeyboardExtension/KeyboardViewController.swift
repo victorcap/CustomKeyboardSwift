@@ -79,6 +79,7 @@ class KeyboardViewController: UIInputViewController {
             self.userLexicon = lexicon
         }
         
+        self.suggestionColorBar.frame.size.width = UIScreen.main.bounds.width
         self.suggestionColorBar.applyGradient(colours: [Constants.gradientFirstColorClassic, Constants.gradientSecondColorClassic, Constants.gradienteThirdColorClassic, Constants.gradienteFourthColorClassic, Constants.gradienteFifthColorClassic])
 	}
 	
@@ -93,7 +94,7 @@ class KeyboardViewController: UIInputViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		let heightConstraint = NSLayoutConstraint(item: view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 270)
+		let heightConstraint = NSLayoutConstraint(item: view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 260)
 		view.addConstraint(heightConstraint)
 		
 	}
@@ -215,7 +216,8 @@ class KeyboardViewController: UIInputViewController {
 //                button.layer.shadowOffset = CGSize(width: 0, height: 1)
 //                button.layer.shadowOpacity = 0.5
 //                button.layer.shadowRadius = 0.0
-                button.layer.masksToBounds = false
+//                button.layer.masksToBounds = false
+                button.titleLabel?.font = UIFont.systemFont(ofSize: 22)
 				button.layer.setValue(key, forKey: "original")
 				button.layer.setValue(keyToDisplay, forKey: "keyToDisplay")
 				button.layer.setValue(false, forKey: "isSpecial")
@@ -226,8 +228,9 @@ class KeyboardViewController: UIInputViewController {
 				button.addTarget(self, action: #selector(keyTouchDown), for: .touchDown)
 				button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
 				button.addTarget(self, action: #selector(keyMultiPress(_:event:)), for: .touchDownRepeat)
+                button.layer.cornerRadius = buttonWidth/5
                 
-                if key != "🌐" && key != "💰" && key != "Retorno" && key != "#+=" && key != "ABC" && key != "123" && key != "⬆️" && key != "space" {
+                if key != "🌐" && key != "Bradesco" && key != "Retorno" && key != "#+=" && key != "ABC" && key != "123" && key != "⬆️" && key != "space" {
                     if key == "⌫"{
                         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(backspaceKeyLongPressed(_:)))
                         button.addGestureRecognizer(longPressRecognizer)
@@ -241,55 +244,68 @@ class KeyboardViewController: UIInputViewController {
 				
 				if key == "🌐"{
 					nextKeyboardButton = button
+                    button.layer.setValue(true, forKey: "isSpecial")
+                    button.backgroundColor = Constants.keyNormalColour
+                    button.setTitle("", for: .normal)
+                    button.setImage(UIImage(named: "ico_globe"), for: .normal)
 				}
                 
-				if key == "⌫" || key == "💰" || key == "#+=" || key == "ABC" || key == "123" || key == "⬆️" || key == "🌐"{
+                if key == "Bradesco" {
+                    button.layer.setValue(true, forKey: "isSpecial")
+                    button.backgroundColor = Constants.keyNormalColour
+                    button.setTitle("", for: .normal)
+                    button.setImage(UIImage(named: "ico_bradesco_classic"), for: .normal)
+                }
+                
+				if key == "⌫" || key == "#+=" || key == "ABC" || key == "123" || key == "⬆️" {
+                    button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 					button.widthAnchor.constraint(equalToConstant: buttonWidth + buttonWidth/2).isActive = true
 					button.layer.setValue(true, forKey: "isSpecial")
 					button.backgroundColor = Constants.specialKeyNormalColour
 					if key == "⬆️" {
+                        button.backgroundColor = Constants.keyNormalColour
+                        button.setTitle("", for: .normal)
+                        button.setImage(UIImage(named: "ico_arrow"), for: .normal)
+                        
 						if shiftButtonState != .normal{
-							button.backgroundColor = Constants.keyPressedColour
+                            button.setImage(UIImage(named: "ico_arrow_selected"), for: .normal)
 						}
 						if shiftButtonState == .caps{
-							button.setTitle("⏫", for: .normal)
+                            button.setImage(UIImage(named: "ico_arrow_selected"), for: .normal)
 						}
 					}
+                    
+                    if key == "⌫" {
+                        button.setTitle("", for: .normal)
+                        button.setImage(UIImage(named: "ico_backspace"), for: .normal)
+                    }
 				}else if key == "Retorno"{
                     button.widthAnchor.constraint(equalToConstant: buttonWidth * 2).isActive = true
-                    button.layer.setValue(true, forKey: "isSpecial")
-                    //button.backgroundColor = .red
+                    button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+                    button.setTitleColor(.white, for: .normal)
                     
-//                    let gradientLayer = CAGradientLayer()
-//
-//                    gradientLayer.frame = button.bounds
-//
-//                    gradientLayer.colors = [Constants.gradientFirstColorReturnClassic, Constants.gradientSecondColorReturnClassic, Constants.gradientThirdColorReturnClassic]
-//
-//                    //Vertical
-//                    //gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
-//                    //gradientLayer.endPoint = CGPoint(x: 0.0, y: 1.0)
-//
-//                    //Horizontal
-//                    gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0)
-//                    gradientLayer.endPoint = CGPoint(x: 1.0, y: 0.0)
-//
-//                    gradientLayer.locations = [0.0, 1.0]
-//
-//                    button.layer.insertSublayer(gradientLayer, at: 0)
-//
+                    let btnWidth:CGFloat = 74.0
+                    let btnHeight:CGFloat = 43.0
+                    
+                    button.widthAnchor.constraint(equalToConstant: btnWidth).isActive = true
+                    button.heightAnchor.constraint(equalToConstant: btnHeight).isActive = true
+                    button.frame.size.width = btnWidth
+                    button.frame.size.height = btnHeight
+                    
+                    button.updateConstraints()
                     
                     button.applyGradient(colours: [Constants.gradientFirstColorReturnClassic, Constants.gradientSecondColorReturnClassic, Constants.gradientThirdColorReturnClassic])
                 }else if (keyboardState == .numbers || keyboardState == .symbols) && row == 2{
 					button.widthAnchor.constraint(equalToConstant: buttonWidth * 1.4).isActive = true
 				}else if key != "space"{
-                        button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
+                    button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
+                }else if key == "space" {
+                    button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
                 }else{
 					button.layer.setValue(key, forKey: "original")
 					button.setTitle(key, for: .normal)
 				}
                 
-                button.layer.cornerRadius = buttonWidth/4
                 keys.append(button)
                 switch row{
                 case 0: stackView1.addArrangedSubview(button)
@@ -369,7 +385,7 @@ class KeyboardViewController: UIInputViewController {
 		case "⬆️": 
 			shiftButtonState = shiftButtonState == .normal ? .shift : .normal
 			loadKeys()
-        case "💰":
+        case "Bradesco":
             changeToBradesco()
 		default:
 			if shiftButtonState == .shift {
@@ -423,9 +439,9 @@ class KeyboardViewController: UIInputViewController {
                 popUpView.removeFromSuperview()
             }
             
-            let buttonHeightOriginal = (gesture.view as! UIButton).frame.size.height
-            
-            proxy.insertText("\(buttonHeightOriginal)")
+//            let buttonHeightOriginal = suggestionColorBar.bounds
+//
+//            proxy.insertText("\(buttonHeightOriginal)")
             
             var popUpKeys: [UIButton] = []
             
