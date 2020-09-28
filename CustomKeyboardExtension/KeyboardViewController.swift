@@ -70,7 +70,6 @@ class KeyboardViewController: UIInputViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 		proxy = textDocumentProxy as UITextDocumentProxy
 		loadInterface()
 		self.nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
@@ -102,6 +101,7 @@ class KeyboardViewController: UIInputViewController {
 	func loadInterface(){
 		let keyboardNib = UINib(nibName: "Keyboard", bundle: nil)
 		keyboardView = keyboardNib.instantiate(withOwner: self, options: nil)[0] as? UIView
+        keyboardView.backgroundColor = Constants.keyboardViewColour
         
 		view.addSubview(keyboardView)
 		loadKeys()
@@ -208,7 +208,7 @@ class KeyboardViewController: UIInputViewController {
 			for col in 0...keyboard[row].count - 1{
 				let button = UIButton(type: .custom)
 				button.backgroundColor = Constants.keyNormalColour
-				button.setTitleColor(.black, for: .normal)
+                button.setTitleColor(Constants.titleButtonColour, for: .normal)
                 let key = keyboard[row][col]
 				let capsKey = key.capitalized
 				let keyToDisplay = shiftButtonState == .normal ? key : capsKey
@@ -295,12 +295,23 @@ class KeyboardViewController: UIInputViewController {
                     
                     button.updateConstraints()
                     
-                    button.applyGradient(colours: [Constants.gradientFirstColorReturnClassic, Constants.gradientSecondColorReturnClassic, Constants.gradientThirdColorReturnClassic])
+                    if #available(iOS 13, *) {
+                        if traitCollection.userInterfaceStyle == .dark {
+                            /// Return the color for Dark Mode
+                            button.backgroundColor = Constants.specialKeyNormalColour
+                        } else {
+                            /// Return the color for Light Mode
+                            button.applyGradient(colours: [Constants.gradientFirstColorReturnClassic, Constants.gradientSecondColorReturnClassic, Constants.gradientThirdColorReturnClassic])
+                        }
+                    } else {
+                        /// Return a fallback color for iOS 12 and lower.
+                        button.applyGradient(colours: [Constants.gradientFirstColorReturnClassic, Constants.gradientSecondColorReturnClassic, Constants.gradientThirdColorReturnClassic])
+                    }
                 }else if (keyboardState == .numbers || keyboardState == .symbols) && row == 2{
 					button.widthAnchor.constraint(equalToConstant: buttonWidth * 1.4).isActive = true
-				}else if key != "space"{
+				}else if key != "espaço"{
                     button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
-                }else if key == "space" {
+                }else if key == "espaço" {
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
                 }else{
 					button.layer.setValue(key, forKey: "original")
@@ -370,7 +381,7 @@ class KeyboardViewController: UIInputViewController {
 				loadKeys()
 			}
 			handlDeleteButtonPressed()
-		case "space":
+		case "espaço":
             attemptToReplaceCurrentWord()
 			proxy.insertText(" ")
 		case "🌐":
