@@ -393,7 +393,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PWJTZ7PAUG;
+				DEVELOPMENT_TEAM = X8DHWS7PE9;
 				INFOPLIST_FILE = "$(SRCROOT)/CustomKeyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -413,7 +413,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PWJTZ7PAUG;
+				DEVELOPMENT_TEAM = X8DHWS7PE9;
 				INFOPLIST_FILE = "$(SRCROOT)/CustomKeyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -432,7 +432,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PWJTZ7PAUG;
+				DEVELOPMENT_TEAM = X8DHWS7PE9;
 				INFOPLIST_FILE = "$(SRCROOT)/CustomKeyboardExtension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -454,7 +454,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = PWJTZ7PAUG;
+				DEVELOPMENT_TEAM = X8DHWS7PE9;
 				INFOPLIST_FILE = "$(SRCROOT)/CustomKeyboardExtension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

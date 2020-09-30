@@ -188,7 +188,7 @@ class KeyboardViewController: UIInputViewController {
 		keys.forEach{$0.removeFromSuperview()}
 		paddingViews.forEach{$0.removeFromSuperview()}
 		
-		let buttonWidth = (UIScreen.main.bounds.width - 6) / CGFloat(Constants.letterKeys[0].count)
+		let buttonWidth = (UIScreen.main.bounds.width - 6) / CGFloat(Constants.letterKeys[0].count + 1)
 		
 		var keyboard: [[String]]
 		
@@ -212,18 +212,18 @@ class KeyboardViewController: UIInputViewController {
                 let key = keyboard[row][col]
 				let capsKey = key.capitalized
 				let keyToDisplay = shiftButtonState == .normal ? key : capsKey
-//                button.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
-//                button.layer.shadowOffset = CGSize(width: 0, height: 1)
-//                button.layer.shadowOpacity = 0.5
-//                button.layer.shadowRadius = 0.0
-//                button.layer.masksToBounds = false
+                button.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).cgColor
+                button.layer.shadowOffset = CGSize(width: 0, height: 1)
+                button.layer.shadowOpacity = 0.5
+                button.layer.shadowRadius = 0.0
+                button.layer.masksToBounds = false
                 button.titleLabel?.font = UIFont.systemFont(ofSize: 22)
 				button.layer.setValue(key, forKey: "original")
 				button.layer.setValue(keyToDisplay, forKey: "keyToDisplay")
 				button.layer.setValue(false, forKey: "isSpecial")
 				button.setTitle(keyToDisplay, for: .normal)
-				button.layer.borderColor = keyboardView.backgroundColor?.cgColor
-				button.layer.borderWidth = 3
+//				button.layer.borderColor = keyboardView.backgroundColor?.cgColor
+//				button.layer.borderWidth = 3
 				button.addTarget(self, action: #selector(keyPressedTouchUp), for: .touchUpInside)
 				button.addTarget(self, action: #selector(keyTouchDown), for: .touchDown)
 				button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
@@ -285,8 +285,8 @@ class KeyboardViewController: UIInputViewController {
                     button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
                     button.setTitleColor(.white, for: .normal)
                     
-                    let btnWidth:CGFloat = 74.0
-                    let btnHeight:CGFloat = 43.0
+                    let btnWidth:CGFloat = 68.0
+                    let btnHeight:CGFloat = 47.0
                     
                     button.widthAnchor.constraint(equalToConstant: btnWidth).isActive = true
                     button.heightAnchor.constraint(equalToConstant: btnHeight).isActive = true
