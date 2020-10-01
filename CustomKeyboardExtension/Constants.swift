@@ -44,6 +44,40 @@ enum Constants{
         }
     }()
     
+    static let buttonSuggestionTextColour: UIColor = {
+        if #available(iOS 13, *) {
+            return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
+                if UITraitCollection.userInterfaceStyle == .dark {
+                    /// Return the color for Dark Mode
+                    return UIColor.white
+                } else {
+                    /// Return the color for Light Mode
+                    return UIColor.darkGray
+                }
+            }
+        } else {
+            /// Return a fallback color for iOS 12 and lower.
+            return UIColor.darkGray
+        }
+    }()
+    
+    static let buttonTextColour: UIColor = {
+        if #available(iOS 13, *) {
+            return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
+                if UITraitCollection.userInterfaceStyle == .dark {
+                    /// Return the color for Dark Mode
+                    return UIColor.white
+                } else {
+                    /// Return the color for Light Mode
+                    return UIColor.black
+                }
+            }
+        } else {
+            /// Return a fallback color for iOS 12 and lower.
+            return UIColor.black
+        }
+    }()
+    
 	static let specialKeyNormalColour: UIColor = {
         if #available(iOS 13, *) {
             return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
@@ -95,24 +129,24 @@ enum Constants{
         }
     }()
 
-	static let letterKeys = [
+	static var letterKeys = [
 		["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"], 
 		["a", "s", "d", "f", "g","h", "j", "k", "l"],
 		["⬆️", "z", "x", "c", "v", "b", "n", "m", "⌫"],
-		["123", "🌐", "espaço", "Bradesco", "Retorno"]
+		["123", "🌐", "😀", "espaço", "Bradesco", "Retorno"]
 	]
 	static let numberKeys = [
 		["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
 		["-", "/", ":", ";", "(", ")" ,"$", "&", "@", "\""],
 		["#+=",".", ",", "?", "!", "\'", "⌫"],
-		["ABC", "🌐", "espaço", "Bradesco", "Retorno"]
+		["ABC", "🌐", "😀", "espaço", "Bradesco", "Retorno"]
 	]
 	
 	static let symbolKeys = [
 		["[", "]", "{", "}", "#", "%", "^", "*", "+", "="],
 		["_", "\\", "|", "~", "<", ">", "€", "£", "¥", "·"],
 		["123",".", ",", "?", "!", "\'", "⌫"],
-		["ABC", "🌐", "espaço", "Bradesco", "Retorno"]
+		["ABC", "🌐", "😀", "espaço", "Bradesco", "Retorno"]
 	]
     
     static let extrasLettersE = ["e", "è", "é", "ê", "ë", "ē", "ė", "ę"]

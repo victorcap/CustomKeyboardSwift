@@ -155,7 +155,7 @@ class KeyboardViewController: UIInputViewController {
                     let key = items[row]
                     button.layer.setValue(key, forKey: "original")
                     button.setTitle(key, for: .normal)
-                    button.setTitleColor(.darkGray, for: .normal)
+                    button.setTitleColor(Constants.buttonSuggestionTextColour, for: .normal)
                     button.addTarget(self, action: #selector(suggestionKeyPressedTouchUp), for: .touchUpInside)
 
                     suggestedKeys.append(button)
@@ -494,7 +494,7 @@ class KeyboardViewController: UIInputViewController {
                 for row in 0...letters - 1{
                     let button = UIButton(type: .custom)
                     button.backgroundColor = Constants.keyNormalColour
-                    button.setTitleColor(.black, for: .normal)
+                    button.setTitleColor(Constants.buttonTextColour, for: .normal)
                     let key = extraKeyboard[row]
                     let capsKey = key.capitalized
                     let keyToDisplay = shiftButtonState == .normal ? key : capsKey
