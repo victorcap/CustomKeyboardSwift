@@ -381,13 +381,16 @@ class KeyboardViewController: UIInputViewController {
 				loadKeys()
 			}
 			handlDeleteButtonPressed()
+            predictionWords()
 		case "espaço":
             attemptToReplaceCurrentWord()
 			proxy.insertText(" ")
+            predictionWords()
 		case "🌐":
 			break
 		case "Retorno":
 			proxy.insertText("\n")
+            predictionWords()
 		case "123":
 			changeKeyboardToNumberKeys()
 		case "ABC":
