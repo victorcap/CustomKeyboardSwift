@@ -157,6 +157,7 @@ class KeyboardViewController: UIInputViewController {
                     button.setTitle(key, for: .normal)
                     button.setTitleColor(Constants.buttonSuggestionTextColour, for: .normal)
                     button.addTarget(self, action: #selector(suggestionKeyPressedTouchUp), for: .touchUpInside)
+                    button.widthAnchor.constraint(equalToConstant: stackView0.bounds.width/CGFloat(numItems)-CGFloat(numItems - 1)).isActive = true
 
                     suggestedKeys.append(button)
                     stackView0.addArrangedSubview(button)
