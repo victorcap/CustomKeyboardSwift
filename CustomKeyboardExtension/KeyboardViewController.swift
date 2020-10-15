@@ -512,10 +512,12 @@ class KeyboardViewController: UIInputViewController {
                     button.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
                     button.frame.size.width = buttonWidth
                     button.frame.size.height = buttonHeight
-                    button.addTarget(self, action: #selector(keyPressedTouchUp), for: .touchUpInside)
-                    button.addTarget(self, action: #selector(keyTouchDown), for: .touchDown)
-                    button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
-                    button.addTarget(self, action: #selector(keyMultiPress(_:event:)), for: .touchDownRepeat)
+//                    button.addTarget(self, action: #selector(keyPressedTouchUp), for: .touchUpInside)
+//                    button.addTarget(self, action: #selector(keyTouchDown), for: .touchDown)
+//                    button.addTarget(self, action: #selector(keyUntouched), for: .touchDragExit)
+//                    button.addTarget(self, action: #selector(keyMultiPress(_:event:)), for: .touchDownRepeat)
+//                    button.pressedColour(colour: .red, uiImage: nil, alphaMultiplier: 1.0)
+                    
                     button.layer.cornerRadius = buttonWidth/4
 
                     popUpKeys.append(button)
@@ -546,10 +548,29 @@ class KeyboardViewController: UIInputViewController {
                 
                 self.view.addSubview(popUpView)
             }
-
-		} else if gesture.state == .ended || gesture.state == .cancelled {
-            //popUpKeys.forEach{$0.removeFromSuperview()}
-            popUpView.removeFromSuperview()
+        } else if gesture.state == .ended || gesture.state == .cancelled {
+            
+            let xPopUp = gesture.location(in: popUpLetters).x
+            let yPopUp = gesture.location(in: popUpLetters).y
+            
+            if xPopUp >= 0 && xPopUp < popUpLetters.bounds.width {
+                if yPopUp >= 0 && yPopUp < popUpLetters.bounds.height {
+                    for i in 0..<popUpLetters.subviews.count {
+                        let subview = popUpLetters.subviews[i]
+                        if subview.isKind(of: UIButton.self) {
+                            if gesture.location(in: subview).x < 0 {
+                                keyPressedTouchUp((popUpLetters.subviews[i-1] as! UIButton))
+                                popUpView.removeFromSuperview()
+                                (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
+                                return
+                            }
+                        }
+                    }
+                }
+            }
+            if popUpView != nil {
+                popUpView.removeFromSuperview()
+            }
             (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
 		}
 	}
