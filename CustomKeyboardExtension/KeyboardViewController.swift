@@ -459,6 +459,19 @@ class KeyboardViewController: UIInputViewController {
 //
 //            proxy.insertText("\(buttonHeightOriginal)")
             
+            var keyboardColor: UIColor?
+            
+            if #available(iOS 13, *) {
+                if traitCollection.userInterfaceStyle == .dark {
+                    keyboardColor = UIColor(red: 29/255.0, green: 29/255.0, blue: 29/255.0, alpha: 1)
+                } else {
+                    keyboardColor = UIColor(red: 236/255.0, green: 239/255.0, blue: 241/255.0, alpha: 1)
+                }
+            } else {
+                // Fallback on earlier versions
+                keyboardColor = UIColor(red: 236/255.0, green: 239/255.0, blue: 241/255.0, alpha: 1)
+            }
+            
             var popUpKeys: [UIButton] = []
             
             let buttonWidth:CGFloat = 35.0
@@ -506,7 +519,7 @@ class KeyboardViewController: UIInputViewController {
                     button.layer.setValue(keyToDisplay, forKey: "keyToDisplay")
                     button.layer.setValue(false, forKey: "isSpecial")
                     button.setTitle(keyToDisplay, for: .normal)
-                    button.layer.borderColor = keyboardView.backgroundColor?.cgColor
+                    button.layer.borderColor = keyboardColor?.cgColor
                     button.layer.borderWidth = 4
                     button.widthAnchor.constraint(equalToConstant: buttonWidth).isActive = true
                     button.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
@@ -535,9 +548,10 @@ class KeyboardViewController: UIInputViewController {
                 
                 //PopUpView
                 popUpView=UIView(frame: CGRect(x: tapLocation.x-10, y: tapLocation.y-65, width: popUpLetters.frame.size.width, height: popUpLetters.frame.size.height))
-                popUpView.backgroundColor=keyboardView.backgroundColor
+                popUpView.backgroundColor=keyboardColor
                 popUpView.layer.cornerRadius=5
                 popUpView.layer.borderWidth=2
+                popUpView.clipsToBounds = true
                 popUpView.tag=1001
                 popUpView.layer.borderColor=UIColor.gray.cgColor
                 popUpView.setNeedsLayout()
@@ -551,31 +565,36 @@ class KeyboardViewController: UIInputViewController {
             let xPopUp = gesture.location(in: popUpLetters).x
             let yPopUp = gesture.location(in: popUpLetters).y
             
-            if xPopUp >= 0 && xPopUp < popUpLetters.bounds.width {
-                if yPopUp >= 0 && yPopUp < popUpLetters.bounds.height {
-                    for i in 0..<popUpLetters.subviews.count {
-                        let subview = popUpLetters.subviews[i]
-                        if subview.isKind(of: UIButton.self) {
-                            subview.backgroundColor = Constants.keyNormalColour
-                            if i == popUpLetters.subviews.count - 1 {
+            let insideX = xPopUp >= 0 && xPopUp < popUpLetters.bounds.width
+            let insideY = yPopUp >= 0 && yPopUp < popUpLetters.bounds.height
+            
+            if insideX && insideY {
+                for i in 0..<popUpLetters.subviews.count {
+                    let subview = popUpLetters.subviews[i]
+                    if subview.isKind(of: UIButton.self) {
+                        subview.backgroundColor = Constants.keyNormalColour
+                        if i == popUpLetters.subviews.count - 1 {
+                            if gesture.location(in: subview).x >= 0 {
                                 if gesture.location(in: subview).x >= 0 {
-                                    if gesture.location(in: subview).x >= 0 {
-                                        (subview as! UIButton).backgroundColor = Constants.specialKeyNormalColour
-                                    }
-                                } else {
-                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
-                                        (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
-                                    }
+                                    (subview as! UIButton).backgroundColor = Constants.specialKeyNormalColour
                                 }
                             } else {
-                                if gesture.location(in: subview).x < 0 {
-                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
-                                        (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
-                                    }
+                                if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                    (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+                                }
+                            }
+                        } else {
+                            if gesture.location(in: subview).x < 0 {
+                                if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                    (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
                                 }
                             }
                         }
                     }
+                }
+            } else {
+                for i in 0..<popUpLetters.subviews.count {
+                    (popUpLetters.subviews[i] as! UIButton).backgroundColor = Constants.keyNormalColour
                 }
             }
         } else if gesture.state == .ended || gesture.state == .cancelled {
@@ -583,33 +602,34 @@ class KeyboardViewController: UIInputViewController {
             let xPopUp = gesture.location(in: popUpLetters).x
             let yPopUp = gesture.location(in: popUpLetters).y
             
-            if xPopUp >= 0 && xPopUp < popUpLetters.bounds.width {
-                if yPopUp >= 0 && yPopUp < popUpLetters.bounds.height {
-                    for i in 0..<popUpLetters.subviews.count {
-                        let subview = popUpLetters.subviews[i]
-                        if subview.isKind(of: UIButton.self) {
-                            if i == popUpLetters.subviews.count - 1 {
-                                if gesture.location(in: subview).x >= 0 {
-                                    keyPressedTouchUp((subview as! UIButton))
+            let insideX = xPopUp >= 0 && xPopUp < popUpLetters.bounds.width
+            let insideY = yPopUp >= 0 && yPopUp < popUpLetters.bounds.height
+            
+            if insideX && insideY {
+                for i in 0..<popUpLetters.subviews.count {
+                    let subview = popUpLetters.subviews[i]
+                    if subview.isKind(of: UIButton.self) {
+                        if i == popUpLetters.subviews.count - 1 {
+                            if gesture.location(in: subview).x >= 0 {
+                                keyPressedTouchUp((subview as! UIButton))
+                                popUpView.removeFromSuperview()
+                                (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
+                                return
+                            } else {
+                                if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                    keyPressedTouchUp((popUpLetters.subviews[i-1] as! UIButton))
                                     popUpView.removeFromSuperview()
                                     (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
                                     return
-                                } else {
-                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
-                                        keyPressedTouchUp((popUpLetters.subviews[i-1] as! UIButton))
-                                        popUpView.removeFromSuperview()
-                                        (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
-                                        return
-                                    }
                                 }
-                            } else {
-                                if gesture.location(in: subview).x < 0 {
-                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
-                                        keyPressedTouchUp((popUpLetters.subviews[i-1] as! UIButton))
-                                        popUpView.removeFromSuperview()
-                                        (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
-                                        return
-                                    }
+                            }
+                        } else {
+                            if gesture.location(in: subview).x < 0 {
+                                if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                    keyPressedTouchUp((popUpLetters.subviews[i-1] as! UIButton))
+                                    popUpView.removeFromSuperview()
+                                    (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
+                                    return
                                 }
                             }
                         }
