@@ -480,7 +480,7 @@ class KeyboardViewController: UIInputViewController {
 
             let tapLocation = gesture.location(in: self.view)
 
-            if let key = (gesture.view as! UIButton).titleLabel?.text {
+            if let key = (gesture.view as! UIButton).titleLabel?.text?.lowercased() {
                 
                 switch key {
                     case "a":
