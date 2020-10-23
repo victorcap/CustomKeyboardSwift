@@ -555,7 +555,6 @@ class KeyboardViewController: UIInputViewController {
                 if yPopUp >= 0 && yPopUp < popUpLetters.bounds.height {
                     for i in 0..<popUpLetters.subviews.count {
                         let subview = popUpLetters.subviews[i]
-                        let previousSubview = popUpLetters.subviews[i-1]
                         if subview.isKind(of: UIButton.self) {
                             subview.backgroundColor = Constants.keyNormalColour
                             if i == popUpLetters.subviews.count - 1 {
@@ -564,14 +563,14 @@ class KeyboardViewController: UIInputViewController {
                                         (subview as! UIButton).backgroundColor = Constants.specialKeyNormalColour
                                     }
                                 } else {
-                                    if gesture.location(in: previousSubview).x >= 0 {
-                                        (previousSubview as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                        (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
                                     }
                                 }
                             } else {
                                 if gesture.location(in: subview).x < 0 {
-                                    if gesture.location(in: previousSubview).x >= 0 {
-                                        (previousSubview as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                        (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
                                     }
                                 }
                             }
@@ -588,7 +587,6 @@ class KeyboardViewController: UIInputViewController {
                 if yPopUp >= 0 && yPopUp < popUpLetters.bounds.height {
                     for i in 0..<popUpLetters.subviews.count {
                         let subview = popUpLetters.subviews[i]
-                        let previousSubview = popUpLetters.subviews[i-1]
                         if subview.isKind(of: UIButton.self) {
                             if i == popUpLetters.subviews.count - 1 {
                                 if gesture.location(in: subview).x >= 0 {
@@ -597,8 +595,8 @@ class KeyboardViewController: UIInputViewController {
                                     (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
                                     return
                                 } else {
-                                    if gesture.location(in: previousSubview).x >= 0 {
-                                        keyPressedTouchUp((previousSubview as! UIButton))
+                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                        keyPressedTouchUp((popUpLetters.subviews[i-1] as! UIButton))
                                         popUpView.removeFromSuperview()
                                         (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
                                         return
@@ -606,8 +604,8 @@ class KeyboardViewController: UIInputViewController {
                                 }
                             } else {
                                 if gesture.location(in: subview).x < 0 {
-                                    if gesture.location(in: previousSubview).x >= 0 {
-                                        keyPressedTouchUp((previousSubview as! UIButton))
+                                    if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
+                                        keyPressedTouchUp((popUpLetters.subviews[i-1] as! UIButton))
                                         popUpView.removeFromSuperview()
                                         (gesture.view as! UIButton).backgroundColor = Constants.keyNormalColour
                                         return
