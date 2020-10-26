@@ -128,6 +128,23 @@ enum Constants{
             return UIColor.black
         }
     }()
+    
+    static let keyButtonPressedColour: UIColor = {
+        if #available(iOS 13, *) {
+            return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
+                if UITraitCollection.userInterfaceStyle == .dark {
+                    /// Return the color for Dark Mode
+                    return UIColor.black
+                } else {
+                    /// Return the color for Light Mode
+                    return UIColor(red: 219/255, green: 220/252, blue: 220/252, alpha: 1)
+                }
+            }
+        } else {
+            /// Return a fallback color for iOS 12 and lower.
+            return UIColor(red: 219/255, green: 220/252, blue: 220/252, alpha: 1)
+        }
+    }()
 
 	static var letterKeys = [
 		["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"], 

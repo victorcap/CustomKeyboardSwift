@@ -576,17 +576,17 @@ class KeyboardViewController: UIInputViewController {
                         if i == popUpLetters.subviews.count - 1 {
                             if gesture.location(in: subview).x >= 0 {
                                 if gesture.location(in: subview).x >= 0 {
-                                    (subview as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+                                    (subview as! UIButton).backgroundColor = Constants.keyButtonPressedColour
                                 }
                             } else {
                                 if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
-                                    (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+                                    (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.keyButtonPressedColour
                                 }
                             }
                         } else {
                             if gesture.location(in: subview).x < 0 {
                                 if gesture.location(in: popUpLetters.subviews[i-1]).x >= 0 {
-                                    (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.specialKeyNormalColour
+                                    (popUpLetters.subviews[i-1] as! UIButton).backgroundColor = Constants.keyButtonPressedColour
                                 }
                             }
                         }
