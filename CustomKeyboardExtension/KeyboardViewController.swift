@@ -549,6 +549,20 @@ class KeyboardViewController: UIInputViewController {
                 
                 //PopUpView
                 popUpView=UIView(frame: CGRect(x: tapLocation.x-10, y: tapLocation.y-65, width: popUpLetters.frame.size.width, height: popUpLetters.frame.size.height))
+                
+                let maxViewSizeX = view.bounds.width
+                let popUpMaxX = tapLocation.x - 10 + popUpView.bounds.maxX
+                
+                if popUpMaxX > maxViewSizeX {
+                    popUpView.frame.origin.x = tapLocation.x - 10 - (popUpMaxX - maxViewSizeX)
+                } else if tapLocation.x - 10 < 0 {
+                    popUpView.frame.origin.x = 0
+                }
+                
+                if tapLocation.y - 65 < 0 {
+                    popUpView.frame.origin.y = 0
+                }
+                
                 popUpView.backgroundColor=keyboardColor
                 popUpView.layer.cornerRadius=5
                 popUpView.layer.borderWidth=2
