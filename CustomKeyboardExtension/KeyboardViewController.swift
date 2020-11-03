@@ -386,6 +386,8 @@ class KeyboardViewController: UIInputViewController {
 		case "espaço":
             attemptToReplaceCurrentWord()
 			proxy.insertText(" ")
+            suggestedKeys.forEach{$0.removeFromSuperview()}
+            stackView0.subviews.forEach({$0.removeFromSuperview()})
 		case "🌐":
 			break
 		case "Retorno":
