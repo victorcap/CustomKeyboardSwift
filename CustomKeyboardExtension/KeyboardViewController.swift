@@ -386,7 +386,6 @@ class KeyboardViewController: UIInputViewController {
 		case "espaço":
             attemptToReplaceCurrentWord()
 			proxy.insertText(" ")
-            predictionWords()
 		case "🌐":
 			break
 		case "Retorno":
