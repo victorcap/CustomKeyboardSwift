@@ -382,7 +382,13 @@ class KeyboardViewController: UIInputViewController {
 				loadKeys()
 			}
 			handlDeleteButtonPressed()
-            predictionWords()
+            let value = textDocumentProxy.documentContextBeforeInput ?? ""
+            if (value.last ?? " ") != " " {
+                predictionWords()
+            } else {
+                suggestedKeys.forEach{$0.removeFromSuperview()}
+                stackView0.subviews.forEach({$0.removeFromSuperview()})
+            }
 		case "espaço":
             attemptToReplaceCurrentWord()
 			proxy.insertText(" ")
