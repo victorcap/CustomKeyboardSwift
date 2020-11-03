@@ -392,7 +392,8 @@ class KeyboardViewController: UIInputViewController {
 			break
 		case "Retorno":
 			proxy.insertText("\n")
-            predictionWords()
+            suggestedKeys.forEach{$0.removeFromSuperview()}
+            stackView0.subviews.forEach({$0.removeFromSuperview()})
 		case "123":
 			changeKeyboardToNumberKeys()
 		case "ABC":
